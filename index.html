@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+  <meta charset="UTF-8" />
+  <title>အနားခံပေါင်ချေးတွက်စက်</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: "Noto Sans Myanmar", "Myanmar Text", system-ui, sans-serif;
+      background: #f4f4f6;
+      margin: 0;
+      padding: 0;
+    }
+
+    .app {
+      max-width: 480px;
+      margin: 20px auto;
+      padding: 16px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      margin: 0 0 8px;
+      text-align: center;
+    }
+
+    p.subtitle {
+      font-size: 0.85rem;
+      text-align: center;
+      margin: 0 0 16px;
+      color: #555;
+    }
+
+    .field {
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+      color: #333;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 0.95rem;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      border-radius: 999px;
+      border: none;
+      background: #007bff;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+
+    button:hover {
+      background: #0062cc;
+    }
+
+    .results {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 10px;
+      background: #f9fafb;
+      border: 1px solid #e2e4e8;
+      display: none;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.95rem;
+      margin: 4px 0;
+    }
+
+    .row span.label {
+      color: #555;
+    }
+
+    .row span.value {
+      font-weight: 600;
+    }
+
+    .note {
+      font-size: 0.8rem;
+      color: #777;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>အနားခံချေးတွက်စက်</h1>
+    <p class="subtitle">မြန်မာကျပ်ငွေ၊ လစဉ်အတိုးကို ရက်အလိုက်တွက်ချက်ပေးမည်</p>
+
+    <div class="field">
+      <label for="amount">ချေးငွေပမာဏ (ကျပ်)</label>
+      <input type="number" id="amount" min="0" step="1000" placeholder="ဥပမာ - ၁၀၀၀၀၀ သို့မဟုတ် ၁၀၀၀၀၀၀" />
+    </div>
+
+    <div class="field">
+      <label for="startDate">ချေးယူသည့်နေ့</label>
+      <input type="date" id="startDate" />
+    </div>
+
+    <div class="field">
+      <label for="endDate">ပြန်ဆပ်မည့်နေ့</label>
+      <input type="date" id="endDate" />
+    </div>
+
+    <button id="calcBtn" type="button">တွက်ချက်ပါ</button>
+
+    <div class="results" id="results">
+      <h2>တွက်ချက်ရလဒ်</h2>
+
+      <div class="row">
+        <span class="label">ချေးထားချိန် (ရက်):</span>
+        <span class="value" id="daysCount"></span>
+      </div>
+
+      <div class="row">
+        <span class="label">အသုံးပြုထားသော လစဉ်အတိုးနှုန်း:</span>
+        <span class="value" id="rateUsed"></span>
+      </div>
+
+      <div class="row">
+        <span class="label">အတိုးစုစုပေါင်း:</span>
+        <span class="value" id="totalInterest"></span>
+      </div>
+
+      <div class="row">
+        <span class="label">ပြန်ဆပ်ရငွေစုစုပေါင်း:</span>
+        <span class="value" id="totalRepay"></span>
+      </div>
+
+      <div class="row">
+        <span class="label">လစဉ်ဆပ်ရငွေခန့်မှန်း (၃၀ ရက် = ၁ လ):</span>
+        <span class="value" id="monthlyPayment"></span>
+      </div>
+
+      <p class="note">
+        စည်းကမ်းချက်များ - <br>
+        • ချေးငွေ < ၁,၀၀၀,၀၀၀ ကျပ် → လစဉ် ၃.၅% အတိုး<br>
+        • ချေးငွေ ≥ ၁,၀၀၀,၀၀၀ ကျပ် → လစဉ် ၃% အတိုး<br><br>
+        ရက်လိုက်အတိုးတွက်ပုံ - <br>
+        လစဉ်အတိုးနှုန်းကို ၃၀ ရက်ဖြင့် ခွဲ၍<br>
+        အတိုး = ချေးငွေ × (လစဉ်နှုန်း / ၃၀) × ရက်အရေအတွက်
+      </p>
+    </div>
+  </div>
+
+  <script>
+    function formatKyats(value) {
+      return value.toLocaleString("en-US") + " ကျပ်";
+    }
+
+    const btn = document.getElementById("calcBtn");
+    const resultsBox = document.getElementById("results");
+
+    btn.addEventListener("click", function () {
+      const amount = parseFloat(document.getElementById("amount").value);
+      const startValue = document.getElementById("startDate").value;
+      const endValue = document.getElementById("endDate").value;
+
+      if (isNaN(amount) || amount <= 0) {
+        alert("ကျေးဇူးပြုပြီး ချေးငွေပမာဏကို မှန်ကန်စွာ ထည့်ပါ။");
+        return;
+      }
+
+      if (!startValue || !endValue) {
+        alert("ချေးယူသည့်နေ့နဲ့ ပြန်ဆပ်မည့်နေ့ နှစ်ခုလုံးကို ဖြည့်ပေးပါ။");
+        return;
+      }
+
+      const startDate = new Date(startValue);
+      const endDate = new Date(endValue);
+
+      const msPerDay = 1000 * 60 * 60 * 24;
+      const diffMs = endDate - startDate;
+      const days = Math.round(diffMs / msPerDay);
+
+      if (isNaN(days) || days <= 0) {
+        alert("ပြန်ဆပ်မည့်နေ့ဟာ ချေးယူသည့်နေ့ထက် နောက်သို့ ဖြစ်ရပါမည်။");
+        return;
+      }
+
+      // New rule: >= 1,000,000 → 3%, below → 3.5%
+      let monthlyRate = amount >= 1000000 ? 3.0 : 3.5;
+
+      const dailyRate = (monthlyRate / 100) / 30;
+      const totalInterest = amount * dailyRate * days;
+      const totalRepay = amount + totalInterest;
+      const approxMonths = days / 30;
+      const monthlyPayment = approxMonths > 0 ? totalRepay / approxMonths : totalRepay;
+
+      document.getElementById("daysCount").textContent =
+        days + " ရက် (အနည်းငယ် " + approxMonths.toFixed(2) + " လ လောက်)";
+      document.getElementById("rateUsed").textContent =
+        monthlyRate.toFixed(2) + " % (လစဉ်)";
+      document.getElementById("totalInterest").textContent = formatKyats(totalInterest);
+      document.getElementById("totalRepay").textContent = formatKyats(totalRepay);
+      document.getElementById("monthlyPayment").textContent = formatKyats(monthlyPayment);
+
+      resultsBox.style.display = "block";
+    });
+  </script>
+</body>
+</html>
