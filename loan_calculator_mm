@@ -109,14 +109,13 @@
     <!-- Amount -->
     <div class="field">
       <label for="amount">ချေးငွေပမာဏ (ကျပ်)</label>
-      <input type="number" id="amount" min="0" step="1000" placeholder="ဥပမာ - ၁၀၀၀၀၀ သို့မဟုတ် ၁၀၀၀၀၀၀၀" />
+      <input type="number" id="amount" min="0" step="1000" placeholder="ဥပမာ - ၁၀၀၀၀၀ သို့မဟုတ် ၁၀၀၀၀၀၀" />
     </div>
 
     <!-- Start date -->
     <div class="field">
       <label for="startDate">ချေးယူသည့်နေ့</label>
       <input type="date" id="startDate" />
-      <small>မြန်မာလထားချင်ရင် သင့်စိတ်ထဲနဲ့ ဆိုင်းထားပြီး ဒီနေ့စွဲကို ထည့်ပါ။</small>
     </div>
 
     <!-- End date -->
@@ -158,8 +157,8 @@
 
       <p class="note">
         စည်းကမ်းချက်များ - <br>
-        • ချေးငွေ < ၁၀,၀၀၀,၀၀၀ ကျပ် → လစဉ် ၃% အတိုး<br>
-        • ချေးငွေ ≥ ၁၀,၀၀၀,၀၀၀ ကျပ် → လစဉ် ၂.၅% အတိုး<br><br>
+        • ချေးငွေ < ၁,၀၀၀,၀၀၀ ကျပ် → လစဉ် ၃.၅% အတိုး<br>
+        • ချေးငွေ ≥ ၁,၀၀၀,၀၀၀ ကျပ် → လစဉ် ၃% အတိုး<br><br>
         ရက်လိုက်အတိုးတွက်ပုံ - <br>
         လစဉ်အတိုးနှုန်းကို ၃၀ ရက်ဖြင့် ခွဲ၍<br>
         အတိုး = ချေးငွေ × (လစဉ်နှုန်း / ၃၀) × ရက်အရေအတွက်
@@ -193,7 +192,6 @@
       const startDate = new Date(startValue);
       const endDate = new Date(endValue);
 
-      // milliseconds → days
       const msPerDay = 1000 * 60 * 60 * 24;
       const diffMs = endDate - startDate;
       const days = Math.round(diffMs / msPerDay);
@@ -203,20 +201,15 @@
         return;
       }
 
-      // Decide monthly rate based on amount
-      let monthlyRate = amount >= 10000000 ? 2.5 : 3.0;
+      // ✅ Updated rule
+      let monthlyRate = amount >= 1000000 ? 3.0 : 3.5;
 
-      // Daily rate (percent → fraction)
-      const dailyRate = (monthlyRate / 100) / 30; // 30 days ≈ 1 month
-
+      const dailyRate = (monthlyRate / 100) / 30; 
       const totalInterest = amount * dailyRate * days;
       const totalRepay = amount + totalInterest;
-
-      // Approx monthly payment assuming 30 days = 1 month
       const approxMonths = days / 30;
       const monthlyPayment = approxMonths > 0 ? totalRepay / approxMonths : totalRepay;
 
-      // Update UI
       document.getElementById("daysCount").textContent = days + " ရက် (အနည်းငယ် " + approxMonths.toFixed(2) + " လ လောက်)";
       document.getElementById("rateUsed").textContent = monthlyRate.toFixed(2) + " % (လစဉ်)";
       document.getElementById("totalInterest").textContent = formatKyats(totalInterest);
