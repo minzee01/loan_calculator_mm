@@ -1,221 +1,268 @@
-<!DOCTYPE html>
-<html lang="my">
-<head>
-  <meta charset="UTF-8" />
-  <title>အနားခံပေါင်ချေးတွက်စက်</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    body {
-      font-family: "Noto Sans Myanmar", "Myanmar Text", system-ui, sans-serif;
-      background: #f4f4f6;
-      margin: 0;
-      padding: 0;
-    }
+<!-- --- START: Pawn Shop Records (paste inside <body>) --- -->
+<div class="app">
+  <h1>Pawn Shop — Customer & Item Registry</h1>
 
-    .app {
-      max-width: 480px;
-      margin: 20px auto;
-      padding: 16px;
-      background: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
-    }
-
-    h1 {
-      font-size: 1.4rem;
-      margin: 0 0 8px;
-      text-align: center;
-    }
-
-    p.subtitle {
-      font-size: 0.85rem;
-      text-align: center;
-      margin: 0 0 16px;
-      color: #555;
-    }
-
-    .field {
-      margin-bottom: 12px;
-    }
-
-    label {
-      display: block;
-      font-size: 0.9rem;
-      margin-bottom: 4px;
-      color: #333;
-    }
-
-    input {
-      width: 100%;
-      padding: 8px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 0.95rem;
-      box-sizing: border-box;
-    }
-
-    button {
-      width: 100%;
-      padding: 10px;
-      border-radius: 999px;
-      border: none;
-      background: #007bff;
-      color: #fff;
-      font-size: 1rem;
-      cursor: pointer;
-      margin-top: 6px;
-    }
-
-    button:hover {
-      background: #0062cc;
-    }
-
-    .results {
-      margin-top: 16px;
-      padding: 12px;
-      border-radius: 10px;
-      background: #f9fafb;
-      border: 1px solid #e2e4e8;
-      display: none;
-    }
-
-    .row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.95rem;
-      margin: 4px 0;
-    }
-
-    .row span.label {
-      color: #555;
-    }
-
-    .row span.value {
-      font-weight: 600;
-    }
-
-    .note {
-      font-size: 0.8rem;
-      color: #777;
-      margin-top: 8px;
-    }
-  </style>
-</head>
-<body>
-  <div class="app">
-    <h1>အနားခံချေးတွက်စက်</h1>
-    <p class="subtitle">မြန်မာကျပ်ငွေ၊ လစဉ်အတိုးကို ရက်အလိုက်တွက်ချက်ပေးမည်</p>
-
-    <div class="field">
-      <label for="amount">ချေးငွေပမာဏ (ကျပ်)</label>
-      <input type="number" id="amount" min="0" step="1000" placeholder="ဥပမာ - ၁၀၀၀၀၀ သို့မဟုတ် ၁၀၀၀၀၀၀" />
-    </div>
-
-    <div class="field">
-      <label for="startDate">ချေးယူသည့်နေ့</label>
-      <input type="date" id="startDate" />
-    </div>
-
-    <div class="field">
-      <label for="endDate">ပြန်ဆပ်မည့်နေ့</label>
-      <input type="date" id="endDate" />
-    </div>
-
-    <button id="calcBtn" type="button">တွက်ချက်ပါ</button>
-
-    <div class="results" id="results">
-      <h2>တွက်ချက်ရလဒ်</h2>
-
-      <div class="row">
-        <span class="label">ချေးထားချိန် (ရက်):</span>
-        <span class="value" id="daysCount"></span>
-      </div>
-
-      <div class="row">
-        <span class="label">အသုံးပြုထားသော လစဉ်အတိုးနှုန်း:</span>
-        <span class="value" id="rateUsed"></span>
-      </div>
-
-      <div class="row">
-        <span class="label">အတိုးစုစုပေါင်း:</span>
-        <span class="value" id="totalInterest"></span>
-      </div>
-
-      <div class="row">
-        <span class="label">ပြန်ဆပ်ရငွေစုစုပေါင်း:</span>
-        <span class="value" id="totalRepay"></span>
-      </div>
-
-      <div class="row">
-        <span class="label">လစဉ်ဆပ်ရငွေခန့်မှန်း (၃၀ ရက် = ၁ လ):</span>
-        <span class="value" id="monthlyPayment"></span>
-      </div>
-
-      <p class="note">
-        စည်းကမ်းချက်များ - <br>
-        • ချေးငွေ < ၁,၀၀၀,၀၀၀ ကျပ် → လစဉ် ၃.၅% အတိုး<br>
-        • ချေးငွေ ≥ ၁,၀၀၀,၀၀၀ ကျပ် → လစဉ် ၃% အတိုး<br><br>
-        ရက်လိုက်အတိုးတွက်ပုံ - <br>
-        လစဉ်အတိုးနှုန်းကို ၃၀ ရက်ဖြင့် ခွဲ၍<br>
-        အတိုး = ချေးငွေ × (လစဉ်နှုန်း / ၃၀) × ရက်အရေအတွက်
-      </p>
-    </div>
+  <div class="field">
+    <label for="ticket">Ticket code</label>
+    <input id="ticket" readonly />
+    <button id="genTicket">Generate</button>
   </div>
 
-  <script>
-    function formatKyats(value) {
-      return value.toLocaleString("en-US") + " ကျပ်";
+  <div class="field">
+    <label for="cname">Customer name</label>
+    <input id="cname" />
+  </div>
+
+  <div class="field">
+    <label for="phone">Phone</label>
+    <input id="phone" />
+  </div>
+
+  <div class="field">
+    <label for="address">Address</label>
+    <input id="address" />
+  </div>
+
+  <hr />
+  <h3>Add jewellery item</h3>
+  <div class="field">
+    <label for="itemName">Item name</label>
+    <input id="itemName" />
+  </div>
+  <div class="field">
+    <label for="itemWeight">Weight (g)</label>
+    <input id="itemWeight" type="number" step="0.01" />
+  </div>
+  <div class="field">
+    <label for="itemKarat">Karat</label>
+    <input id="itemKarat" type="number" step="1" value="22" />
+  </div>
+  <div class="field">
+    <label for="itemDesc">Description</label>
+    <input id="itemDesc" />
+  </div>
+  <button id="addItem">Add Item</button>
+
+  <div id="itemsList"></div>
+
+  <hr />
+  <div class="field">
+    <label for="principal">Loan amount (Ks)</label>
+    <input id="principal" type="number" />
+  </div>
+  <div class="field">
+    <label for="startDate">Start date</label>
+    <input id="startDate" type="date" />
+  </div>
+  <div class="field">
+    <label for="endDate">End date</label>
+    <input id="endDate" type="date" />
+  </div>
+
+  <div class="field">
+    <label for="notes">Notes</label>
+    <input id="notes" />
+  </div>
+
+  <button id="saveRecord">Save record</button>
+  <button id="exportCsv">Export CSV</button>
+
+  <hr/>
+  <h3>Search</h3>
+  <input id="searchQ" placeholder="ticket or customer name" />
+  <button id="searchBtn">Search</button>
+  <div id="searchResults"></div>
+</div>
+
+<script>
+/* Simple ticket generator: A1..A100 then B1..B100 ... */
+function nextTicket(existingTickets) {
+  // existingTickets = Set or array
+  const alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  for (let a = 0; a < alpha.length; a++) {
+    for (let n = 1; n <= 100; n++) {
+      const code = alpha[a] + n;
+      if (!existingTickets.has(code)) return code;
     }
+  }
+  return null;
+}
 
-    const btn = document.getElementById("calcBtn");
-    const resultsBox = document.getElementById("results");
+/* Storage helpers */
+const STORAGE_KEY = "pawn_records_v1";
 
-    btn.addEventListener("click", function () {
-      const amount = parseFloat(document.getElementById("amount").value);
-      const startValue = document.getElementById("startDate").value;
-      const endValue = document.getElementById("endDate").value;
+function loadRecords() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  return raw ? JSON.parse(raw) : [];
+}
+function saveRecords(arr) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+}
 
-      if (isNaN(amount) || amount <= 0) {
-        alert("ကျေးဇူးပြုပြီး ချေးငွေပမာဏကို မှန်ကန်စွာ ထည့်ပါ။");
-        return;
-      }
+/* UI helpers */
+const ticketInput = document.getElementById("ticket");
+const genBtn = document.getElementById("genTicket");
+const cname = document.getElementById("cname");
+const phone = document.getElementById("phone");
+const address = document.getElementById("address");
+const itemName = document.getElementById("itemName");
+const itemWeight = document.getElementById("itemWeight");
+const itemKarat = document.getElementById("itemKarat");
+const itemDesc = document.getElementById("itemDesc");
+const addItemBtn = document.getElementById("addItem");
+const itemsList = document.getElementById("itemsList");
+const principal = document.getElementById("principal");
+const startDate = document.getElementById("startDate");
+const endDate = document.getElementById("endDate");
+const notes = document.getElementById("notes");
+const saveRecordBtn = document.getElementById("saveRecord");
+const exportCsvBtn = document.getElementById("exportCsv");
+const searchQ = document.getElementById("searchQ");
+const searchBtn = document.getElementById("searchBtn");
+const searchResults = document.getElementById("searchResults");
 
-      if (!startValue || !endValue) {
-        alert("ချေးယူသည့်နေ့နဲ့ ပြန်ဆပ်မည့်နေ့ နှစ်ခုလုံးကို ဖြည့်ပေးပါ။");
-        return;
-      }
+let items = [];
 
-      const startDate = new Date(startValue);
-      const endDate = new Date(endValue);
+function refreshItemsUI() {
+  itemsList.innerHTML = "";
+  items.forEach((it, i) => {
+    const div = document.createElement("div");
+    div.textContent = `${i+1}. ${it.item_name} — ${it.weight_g}g, ${it.karat}K — ${it.description}`;
+    const btn = document.createElement("button");
+    btn.textContent = "Remove";
+    btn.addEventListener("click", () => { items.splice(i,1); refreshItemsUI(); });
+    div.appendChild(btn);
+    itemsList.appendChild(div);
+  });
+}
 
-      const msPerDay = 1000 * 60 * 60 * 24;
-      const diffMs = endDate - startDate;
-      const days = Math.round(diffMs / msPerDay);
+addItemBtn.addEventListener("click", () => {
+  const it = {
+    item_name: itemName.value || "Item",
+    weight_g: parseFloat(itemWeight.value) || 0,
+    karat: parseInt(itemKarat.value) || 22,
+    description: itemDesc.value || ""
+  };
+  items.push(it);
+  itemName.value = ""; itemWeight.value=""; itemKarat.value="22"; itemDesc.value="";
+  refreshItemsUI();
+});
 
-      if (isNaN(days) || days <= 0) {
-        alert("ပြန်ဆပ်မည့်နေ့ဟာ ချေးယူသည့်နေ့ထက် နောက်သို့ ဖြစ်ရပါမည်။");
-        return;
-      }
+/* generate ticket from existing records */
+genBtn.addEventListener("click", () => {
+  const records = loadRecords();
+  const set = new Set(records.map(r => r.ticket));
+  const t = nextTicket(set);
+  ticketInput.value = t || "";
+});
 
-      // New rule: >= 1,000,000 → 3%, below → 3.5%
-      let monthlyRate = amount >= 1000000 ? 3.0 : 3.5;
+/* save record */
+saveRecordBtn.addEventListener("click", () => {
+  const t = ticketInput.value || "";
+  if (!t) { alert("Generate or enter ticket code"); return; }
+  const amt = parseFloat(principal.value);
+  if (!amt || amt <= 0) { alert("Enter loan amount"); return;}
+  if (items.length === 0) { if(!confirm("No items added. Continue?")) return; }
+  const sd = startDate.value;
+  const ed = endDate.value;
+  if (!sd || !ed) { alert("Select start and end date"); return; }
+  const sdt = new Date(sd), edt = new Date(ed);
+  const days = Math.round((edt - sdt)/(1000*60*60*24));
+  if (days <= 0) { alert("End date must be after start date"); return; }
 
-      const dailyRate = (monthlyRate / 100) / 30;
-      const totalInterest = amount * dailyRate * days;
-      const totalRepay = amount + totalInterest;
-      const approxMonths = days / 30;
-      const monthlyPayment = approxMonths > 0 ? totalRepay / approxMonths : totalRepay;
+  const monthlyRate = amt >= 1000000 ? 3.0 : 3.5;
+  const dailyRate = (monthlyRate/100)/30;
+  const interest = Math.round(amt * dailyRate * days);
+  const totalDue = amt + interest;
 
-      document.getElementById("daysCount").textContent =
-        days + " ရက် (အနည်းငယ် " + approxMonths.toFixed(2) + " လ လောက်)";
-      document.getElementById("rateUsed").textContent =
-        monthlyRate.toFixed(2) + " % (လစဉ်)";
-      document.getElementById("totalInterest").textContent = formatKyats(totalInterest);
-      document.getElementById("totalRepay").textContent = formatKyats(totalRepay);
-      document.getElementById("monthlyPayment").textContent = formatKyats(monthlyPayment);
+  const rec = {
+    ticket: t,
+    customer_name: cname.value || "",
+    phone: phone.value || "",
+    address: address.value || "",
+    items: items.slice(),
+    principal: amt,
+    start_date: sd,
+    due_date: ed,
+    days: days,
+    monthly_rate: monthlyRate,
+    daily_rate: dailyRate,
+    interest: interest,
+    total_due: totalDue,
+    status: "active",
+    notes: notes.value || "",
+    created_at: new Date().toISOString()
+  };
 
-      resultsBox.style.display = "block";
+  const all = loadRecords();
+  // prevent dup ticket
+  if (all.find(r=>r.ticket===t)) {
+    if (!confirm("Ticket exists already. Overwrite?")) return;
+    // remove existing
+    const idx = all.findIndex(r=>r.ticket===t);
+    if (idx>=0) all.splice(idx,1);
+  }
+  all.push(rec);
+  saveRecords(all);
+  alert("Saved: " + t);
+  // reset form
+  ticketInput.value=""; cname.value=""; phone.value=""; address.value=""; items=[]; refreshItemsUI();
+  principal.value=""; startDate.value=""; endDate.value=""; notes.value="";
+});
+
+/* search */
+searchBtn.addEventListener("click", () => {
+  const q = (searchQ.value || "").toLowerCase().trim();
+  const all = loadRecords();
+  const res = all.filter(r => r.ticket.toLowerCase()===q || r.customer_name.toLowerCase().includes(q));
+  searchResults.innerHTML = "";
+  if (res.length===0) { searchResults.textContent = "No results"; return; }
+  res.forEach(r => {
+    const d = document.createElement("div");
+    d.style.border="1px solid #ccc"; d.style.padding="8px"; d.style.margin="6px 0";
+    d.innerHTML = `<b>${r.ticket}</b> - ${r.customer_name} - ${r.phone} - ${r.status}<br>
+      Loan: ${r.principal} Ks, Interest: ${r.interest} Ks, Total: ${r.total_due} Ks<br>
+      Items: ${r.items.map(i=>i.item_name+"("+i.weight_g+"g)").join(", ")}<br>
+      Start: ${r.start_date} Due: ${r.due_date}`;
+    const btn = document.createElement("button");
+    btn.textContent = "Mark Repaid";
+    btn.addEventListener("click", () => {
+      r.status = "repaid";
+      saveRecords(all);
+      alert("Marked repaid");
+      searchBtn.click();
     });
-  </script>
-</body>
-</html>
+    d.appendChild(btn);
+    searchResults.appendChild(d);
+  });
+});
+
+/* CSV export */
+exportCsvBtn.addEventListener("click", () => {
+  const all = loadRecords();
+  if (!all.length) { alert("No records"); return; }
+  // flatten to CSV (one item per row)
+  const rows = [];
+  rows.push(["ticket","customer_name","phone","address","item_name","weight_g","karat","description","principal","start_date","due_date","days","monthly_rate","interest","total_due","status","notes","created_at"]);
+  all.forEach(r => {
+    if (!r.items || r.items.length===0) {
+      rows.push([r.ticket,r.customer_name,r.phone,r.address,"", "", "","", r.principal,r.start_date,r.due_date,r.days,r.monthly_rate,r.interest,r.total_due,r.status,r.notes,r.created_at]);
+    } else {
+      r.items.forEach(it => {
+        rows.push([r.ticket,r.customer_name,r.phone,r.address,it.item_name,it.weight_g,it.karat,it.description,r.principal,r.start_date,r.due_date,r.days,r.monthly_rate,r.interest,r.total_due,r.status,r.notes,r.created_at]);
+      });
+    }
+  });
+  const csv = rows.map(r => r.map(c => '"' + String(c).replace(/"/g,'""') + '"').join(",")).join("\n");
+  const blob = new Blob([csv], {type: "text/csv"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "pawn_records.csv";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+});
+</script>
+<!-- --- END: Pawn Shop Records --- -->
